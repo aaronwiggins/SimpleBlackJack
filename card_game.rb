@@ -1,14 +1,3 @@
-# testing
-# puts "I'm here"
-# thoughts on how to run game
-# class called Game which has basci properties of blackjack
-    # number of cards/deck
-    # number of cards to deal
-    # has many players (5)
-    # has one dealer
-    # deal order
-    # will list out hand/score of each player after everyone has been dealt
-    # will announce winner (player or dealer)
 require './deck'
 require './player'
 require './dealer'

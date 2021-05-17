@@ -1,5 +1,5 @@
 require './blackjackparticipant'
-# dealer created as separate class in case addistional, unique functionality was needed
+# dealer created as separate class in case additional, unique functionality was needed
 class Dealer < BlackJackParticipant
     
     def initialize(name)

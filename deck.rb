@@ -8,12 +8,14 @@ class Deck
     end
 
     def build_deck
+        # for each card and suit, create a new card, passing those to card
         @card_values.each do |card_value|
             @suits.each do |suit_name|
                 card = Card.new(suit_name, card_value)
                 @deck << card
             end
         end
+        # call function to randomize cards
         suffle_deck
     end
 
@@ -28,6 +30,7 @@ class Deck
     end
 
     def get_card_from_deck
+        # pull first card from the deck
         @deck.shift()
     end
 end
