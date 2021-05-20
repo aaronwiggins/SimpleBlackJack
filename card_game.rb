@@ -3,6 +3,9 @@ require './player'
 require './dealer'
 
 class CardGame
+    attr_accessor :card_value_key
+
+    # CARDS_IN_DECK = 52.freeze!
 
     def initialize
         @cards_in_deck = 52
@@ -10,7 +13,7 @@ class CardGame
         @players = []
         @dealer_count = 1
         @dealer = []
-        @card_value_key = card_value_key
+        # @card_value_key = card_value_key
         init_deck
     end
 
@@ -50,7 +53,7 @@ class CardGame
         2.times do |count|
             @players.each_with_index do |player, index| 
                 card_for_player = the_deck.get_card_from_deck
-                player.assign_card(card_for_player)
+                player.create_hand(card_for_player)
             end
             # deal to dealer last
             card_for_dealer = the_deck.get_card_from_deck
@@ -60,6 +63,7 @@ class CardGame
     end
 
     def card_value_key
+
         values = {
             "2" => 2,
             "3" => 3,
@@ -75,13 +79,15 @@ class CardGame
             "K" => 10,
             "A" => 11,
         }
-        return values
+        # can also create the hash with assigning it to a variable and it'd return
+        # "values" would return without using the word "return"
+        # return values
     end
 
     def evaluate_card_values
         # hash object to determine value of cards
         card_key = card_value_key
-        all_participants = (@players << @dealer).flatten
+        all_participants = (@players << @dealer[0]).flatten
         participants_with_scores = {}
         # {
         #     "Player1": "12"},
@@ -90,15 +96,18 @@ class CardGame
         # return the numeric value of the card (suit doesnt matter)
         # build hash
         all_participants.each_with_index do |person, index| 
-            values = person.return_card_values
-            participants_with_scores["#{person.show_name}"] = values.map{|val| card_key[val]}.reduce(:+)
+            values = person.card_values
+            participants_with_scores["#{person.show_name}"] = values.map{|val| card_key[val]}#.reduce(:+)
+            
         end
+        puts participants_with_scores
         # sort everyone by score
-        sorted_participants = participants_with_scores.sort_by {|k, v| -v}
+        # sorted_participants = participants_with_scores.sort_by {|k, v| -v}
+        # [["player1", "12"],["player2","12"]]
         # call function to output scores
-        show_final_participant_scores(sorted_participants)
+        # show_final_participant_scores(sorted_participants)
         # call function to output the winner
-        declare_winner(sorted_participants)
+        # declare_winner(sorted_participants)
     end
 
     def show_final_participant_scores(final_hands)
@@ -107,6 +116,7 @@ class CardGame
 
     def declare_winner(sorted_participants)
         winner = sorted_participants.first
+        $stdout.puts "first participan #{winner}"
         $stdout.puts "The winner is #{winner[0]} with a score of #{winner[1]}"
         if winner[0].include? "Player"
             $stdout.puts "Good job, you beat the dealer!"
