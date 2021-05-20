@@ -1,7 +1,7 @@
 require './blackjackparticipant'
 
 class Player < BlackJackParticipant
-    attr_accessor :me
+    # attr_accessor :me
 
     def initialize(name)
         # @me = BlackJackParticipant.new(name)

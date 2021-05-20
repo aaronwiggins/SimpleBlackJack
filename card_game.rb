@@ -58,7 +58,7 @@ class CardGame
             # deal to dealer last
             card_for_dealer = the_deck.get_card_from_deck
             # only one dealer
-            @dealer[0].assign_card(card_for_dealer)
+            @dealer[0].create_hand(card_for_dealer)
         end
     end
 
@@ -97,17 +97,17 @@ class CardGame
         # build hash
         all_participants.each_with_index do |person, index| 
             values = person.card_values
-            participants_with_scores["#{person.show_name}"] = values.map{|val| card_key[val]}#.reduce(:+)
+            participants_with_scores["#{person.show_name}"] = values.map{|val| card_key[val]}.reduce(:+)
             
         end
-        puts participants_with_scores
+        # puts participants_with_scores
         # sort everyone by score
-        # sorted_participants = participants_with_scores.sort_by {|k, v| -v}
+        sorted_participants = participants_with_scores.sort_by {|k, v| -v}
         # [["player1", "12"],["player2","12"]]
         # call function to output scores
-        # show_final_participant_scores(sorted_participants)
+        show_final_participant_scores(sorted_participants)
         # call function to output the winner
-        # declare_winner(sorted_participants)
+        declare_winner(sorted_participants)
     end
 
     def show_final_participant_scores(final_hands)
