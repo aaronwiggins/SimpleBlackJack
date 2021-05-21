@@ -87,7 +87,7 @@ class CardGame
     def evaluate_card_values
         # hash object to determine value of cards
         card_key = card_value_key
-        all_participants = (@players << @dealer[0]).flatten
+        all_participants = (@players << @dealer[0])# if not using dealer[0], need to flatten
         participants_with_scores = {}
         # {
         #     "Player1": "12"},
@@ -98,9 +98,7 @@ class CardGame
         all_participants.each_with_index do |person, index| 
             values = person.card_values
             participants_with_scores["#{person.show_name}"] = values.map{|val| card_key[val]}.reduce(:+)
-            
         end
-        # puts participants_with_scores
         # sort everyone by score
         sorted_participants = participants_with_scores.sort_by {|k, v| -v}
         # [["player1", "12"],["player2","12"]]
@@ -115,11 +113,49 @@ class CardGame
     end
 
     def declare_winner(sorted_participants)
-        winner = sorted_participants.first
-        $stdout.puts "first participan #{winner}"
-        $stdout.puts "The winner is #{winner[0]} with a score of #{winner[1]}"
+        ties = []
+        sorted_participants.each_with_index{ |item, index|
+                if index == sorted_participants.length-1
+                    break
+                end
+                if sorted_participants[index][1] == sorted_participants[index + 1][1] 
+                    ties << item << sorted_participants[index + 1]
+                end   
+        }
+
+        # puts "ties: #{ties.uniq}"# quick and dirty way to figure ties and unique values
+        # would get issue if there were 3 ties sequentially 
+
+        if ties.length > 0
+            ties.uniq!
+            $stdout.puts "these are the ties: #{ties}"
+            if ties[0].include?(sorted_participants[0][0]) 
+                # if first tie number matches first in list of final scores, the winners tied
+                 $stdout.puts "winners tied"
+                 winning_value = ties[0][1]#winning value
+                 puts "winning_value: #{winning_value}"
+                 potato = []
+                 tied_winners = ties.select{ |item| item[1] == winning_value }
+                 puts tied_winners
+            else
+                $stdout.puts "not a winner tie"
+                really_log_the_winner(sorted_participants)
+            end
+        else
+            really_log_the_winner(sorted_participants)
+        end
+       
+        # puts sorted_participants.length
+        
+        # winner = sorted_participants.first
+        # $stdout.puts "first participan #{winner}"
+        # $stdout.puts "The winner is #{winner[0]} with a score of #{winner[1]}"
+    end
+
+    def really_log_the_winner(participant_results)
+        winner = participant_results.first
         if winner[0].include? "Player"
-            $stdout.puts "Good job, you beat the dealer!"
+            $stdout.puts "Good job, you beat the dealer! #{winner[0]} with a score of #{winner[1]}"
         else 
             $stdout.puts "The Dealer Wins"
         end
