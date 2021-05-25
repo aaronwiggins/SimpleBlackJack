@@ -1,6 +1,7 @@
 require './deck'
-require './player'
-require './dealer'
+require './blackjackparticipant'
+# require './player'
+# require './dealer'
 
 class CardGame
     attr_accessor :card_value_key
@@ -9,7 +10,7 @@ class CardGame
 
     def initialize
         @cards_in_deck = 52
-        @player_count = 5
+        @player_count = 6
         @players = []
         @dealer_count = 1
         @dealer = []
@@ -28,7 +29,7 @@ class CardGame
         # create players
         init_players
         # create dealer
-        init_dealer
+        # init_dealer
         # need to deal cards to players randomly, then the dealer
         deal_the_deck_to_everyone(the_deck)
         #start determining values of each participants hand
@@ -37,13 +38,21 @@ class CardGame
 
     def init_players
         # create a new player for the amount of players in the game
-        (1..@player_count).each { |index| @players << Player.new("Player#{index}") }
+        (1..@player_count).each { |index| 
+            # puts @player_count
+            if index == @player_count
+                @players << BlackJackParticipant.new("The Dealer") 
+            else
+                @players << BlackJackParticipant.new("Player#{index}") 
+            end
+            
+        }
     end
 
-    def init_dealer
-        # create one dealer
-        @dealer << Dealer.new('The Dealer')
-    end
+    # def init_dealer
+    #     # create one dealer
+    #     @dealer << Dealer.new('The Dealer')
+    # end
 
     def deal_the_deck_to_everyone(the_deck)
         # shuffle deal order (round robin?), but always give card to dealer last
@@ -56,9 +65,9 @@ class CardGame
                 player.create_hand(card_for_player)
             end
             # deal to dealer last
-            card_for_dealer = the_deck.get_card_from_deck
+            # card_for_dealer = the_deck.get_card_from_deck
             # only one dealer
-            @dealer[0].create_hand(card_for_dealer)
+            # @dealer[0].create_hand(card_for_dealer)
         end
     end
 
@@ -87,7 +96,7 @@ class CardGame
     def evaluate_card_values
         # hash object to determine value of cards
         card_key = card_value_key
-        all_participants = (@players << @dealer[0])# if not using dealer[0], need to flatten
+        all_participants = @players# if not using dealer[0], need to flatten
         participants_with_scores = {}
         # {
         #     "Player1": "12"},
